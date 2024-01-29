@@ -1,9 +1,19 @@
 import { useState, useEffect } from "react";
+import UserCard from './components/UserCard'
+import FormInput from "./components/FormInput";
 
 function App() {
   const [count, setCount] = useState(0);
-  const [firstName, setFirstname] = useState("");
-  const [lastName, setLastname] = useState("");
+
+  const [todoList, setTodos] = useState(() => {
+    const localTodos = localStorage.getItem("todoList")
+
+    if (localTodos) {
+      return JSON.parse(localTodos)
+    } else {
+      return [];
+    }
+  });
 
   const plusCount = () => {
     setCount(count + 1);
@@ -19,24 +29,25 @@ function App() {
     }
   }, [count]);
 
-  const handleInput = (event) => {
-    const { name, value } = event.target;
-    switch (name) {
-      case 'fistname':
-        setFirstname(value)
-        break;
-      case 'lastname':
-        setLastname(value)
-        break;
-    }
-  };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log('Fistname : ',firstName);
-    console.log('Lastname : ',lastName);
-    setFirstname('')
-    setLastname('')
+  useEffect(() => {
+    localStorage.setItem("todoList", JSON.stringify(todoList))
+  },[todoList])
+
+  const onAddItem = (list) => {
+    setTodos([...todoList, list])
+  }
+
+  const onChangeItem = (list) => {
+    setTodos((prevTodos) => {
+      return prevTodos.map((todo) => {
+        return todo.id === list.id ? {...todo,...list} : todo
+      })
+    })
+  }
+
+  const onDeleteItem = (id) => {
+    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id))
   }
 
   return (
@@ -59,25 +70,12 @@ function App() {
           +
         </button>
       </div>
-      <form onSubmit={handleSubmit} className="bg-gray-300 rounded-lg shadow-lg p-5 space-y-3 w-96">
-        <p className="text-2xl">Fistname : {firstName}</p>
-        <input
-          type="text"
-          className="rounded-md p-2 w-full"
-          value={firstName}
-          onChange={handleInput}
-          name="fistname"
-        />
-        <p className="text-2xl">Lastname : {lastName}</p>
-        <input
-          type="text"
-          className="rounded-md p-2 w-full"
-          value={lastName}
-          onChange={handleInput}
-          name="lastname"
-        />
-        <button className="rounded-lg p-3 bg-blue-500" type="submit">บันทึก</button>
-      </form>
+      <FormInput onSubmit={onAddItem}/>
+      <div className="grid grid-cols-2 gap-5 w-full">
+        {todoList.map((todo) => (
+          <UserCard key={todo.id} list={todo} onPush={onChangeItem} onDelete={onDeleteItem}/>
+        ))}
+      </div>
     </div>
   );
 }

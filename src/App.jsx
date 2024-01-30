@@ -4,6 +4,9 @@ function App() {
   const [count, setCount] = useState(0);
   const [firstName, setFirstname] = useState("");
   const [lastName, setLastname] = useState("");
+  const [nickName, setNickname] = useState("");
+  const [age, setAge] = useState("");
+  const [tel, setTel] = useState("");
 
   const plusCount = () => {
     setCount(count + 1);
@@ -28,6 +31,15 @@ function App() {
       case 'lastname':
         setLastname(value)
         break;
+      case 'nickname':
+        setNickname(value)
+        break;
+      case 'age':
+        setAge(value)
+        break;
+      case 'phone':
+        setTel(value)
+        break;
     }
   };
 
@@ -35,8 +47,14 @@ function App() {
     event.preventDefault();
     console.log('Fistname : ',firstName);
     console.log('Lastname : ',lastName);
+    console.log('Nickname : ',nickName);
+    console.log('Age : ',age);
+    console.log('Phone : ',tel);
     setFirstname('')
     setLastname('')
+    setNickname('')
+    setAge('')
+    setTel('')
   }
 
   return (
@@ -75,6 +93,30 @@ function App() {
           value={lastName}
           onChange={handleInput}
           name="lastname"
+        />
+        <p className="text-2xl">Nickname : {nickName}</p>
+        <input
+          type="text"
+          className="rounded-md p-2 w-full"
+          value={nickName}
+          onChange={handleInput}
+          name="nickname"
+        />
+        <p className="text-2xl">Age : {age}</p>
+        <input
+          type="number"
+          className="rounded-md p-2 w-full"
+          value={age}
+          onChange={handleInput}
+          name="age"
+        />
+        <p className="text-2xl">Phone : {tel}</p>
+        <input
+          type="text"
+          className="rounded-md p-2 w-full"
+          value={tel}
+          onChange={handleInput}
+          name="phone"
         />
         <button className="rounded-lg p-3 bg-blue-500" type="submit">บันทึก</button>
       </form>
